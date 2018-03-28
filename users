@@ -1,0 +1,54 @@
+#!/bin/sh
+##FUNCTIONS
+title(){
+	echo
+	echo "*****************   Users Connect   *****************************"
+	echo "*************************************  gitHub:nrikeDevelop  *****"
+}
+subtitle(){
+	echo
+	echo "------> User connect <-----"
+	echo
+}
+footer(){
+	echo
+	echo "------> user : $1"
+	echo
+}
+is_filled(){
+	if [ $# -ge 1 ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+print(){
+	if is_filled $*
+        then echo "$1: $2\t"
+        fi
+}
+##MAIN
+title
+cont=0
+for i in $(who | tr -s " " "_" | tail -n +2)
+do
+	subtitle
+	user=$i
+	dni=$(echo $user | cut -d"_" -f1)
+	UID=$(getent passwd | grep $dni | tr " " "_" | cut -f3 -d":")
+	name=$(getent passwd | grep $dni | tr " " "_" | cut -f5 -d":")
+	date_time=$(echo $user | cut -d"_" -f3,4)
+	ip=$(echo $user | cut -d"_" -f5)
+	print Dni $dni
+	print UID $UID
+	print Nombre $name
+	print Ultima_conexión $date_time
+	print Ip $ip
+	cont=$(expr $cont + 1)
+	footer $cont
+done
+echo
+echo "Total de usuarios conectados: $cont"
+echo
+echo
